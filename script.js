@@ -12,6 +12,9 @@ import * as astronaut from "https://opensource.liveg.tech/Adapt-UI/astronaut/ast
 
 import * as main from "./main.js";
 
+export var mainScreen = null;
+export var newProjectScreen = null;
+
 window.$g = $g;
 
 astronaut.unpack();
@@ -27,12 +30,17 @@ $g.waitForLoad().then(function() {
 
     $g.theme.setProperty("primaryHue", "120");
     $g.theme.setProperty("primarySaturation", "60%");
-    $g.theme.setProperty("primaryLightness", "40%");
+    $g.theme.setProperty("primaryLightness", "30%");
     $g.theme.setProperty("secondaryHue", "120");
     $g.theme.setProperty("secondarySaturation", "60%");
-    $g.theme.setProperty("secondaryLightness", "30%");
+    $g.theme.setProperty("secondaryLightness", "40%");
 
     $g.sel("title").setText(_("polyglot"));
 
-    astronaut.render(main.MainScreen({showing: true}) ());
+    astronaut.render(
+        Container (
+            mainScreen = main.MainScreen({showing: true}) (),
+            newProjectScreen = main.NewProjectScreen() ()
+        )
+    );
 });

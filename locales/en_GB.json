@@ -8,6 +8,28 @@
     "source": {
         "polyglot": "Polyglot",
 
-        "projects": "Projects"
+        "back": "Back",
+        "create": "Create",
+        "cancel": "Cancel",
+        "optional": "(Optional)",
+
+        "projects": "Projects",
+
+        "projects_new": "New project",
+
+        "projects_new_title": "Create a new project",
+        "projects_new_projectName": "Name",
+        "projects_new_projectZoneName": "Zone name",
+        "projects_new_projectOwner": "Owner/organisation",
+        "projects_new_projectDescription": "Description",
+        "projects_new_projectType": "Project type",
+        "projects_new_projectType_resourceFiles_title": "Resource files",
+        "projects_new_projectType_resourceFiles_description": "For setups where there are JSON files for each locale that each contain a set of named, localised strings.",
+        "projects_new_projectType_properties_title": "Properties in a single file",
+        "projects_new_projectType_properties_description": "For translating structured JSON data stored in a single file.",
+        "projects_new_incompleteError": "Please fill in all the required fields.",
+
+        "projects_zoneSeparator": ": ",
+        "projects_descriptionSeparator": " · "
     }
 }
