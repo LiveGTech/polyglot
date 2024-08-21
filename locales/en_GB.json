@@ -30,6 +30,8 @@
         "projects_new_incompleteError": "Please fill in all the required fields.",
 
         "projects_zoneSeparator": ": ",
-        "projects_descriptionSeparator": " · "
+        "projects_descriptionSeparator": " · ",
+
+        "locales": "Locales"
     }
 }
