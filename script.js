@@ -14,6 +14,7 @@ import * as main from "./main.js";
 
 export var mainScreen = null;
 export var newProjectScreen = null;
+export var projectViewContainer = null;
 
 window.$g = $g;
 
@@ -40,7 +41,8 @@ $g.waitForLoad().then(function() {
     astronaut.render(
         Container (
             mainScreen = main.MainScreen({showing: true}) (),
-            newProjectScreen = main.NewProjectScreen() ()
+            newProjectScreen = main.NewProjectScreen() (),
+            projectViewContainer = Container() ()
         )
     );
 });

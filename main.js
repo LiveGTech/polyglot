@@ -11,6 +11,7 @@ import * as astronaut from "https://opensource.liveg.tech/Adapt-UI/astronaut/ast
 
 import * as polyglot from "./script.js";
 import * as projects from "./projects.js";
+import * as projectView from "./projectview.js";
 
 export var ProjectsPage = astronaut.component("ProjectsPage", function(props, children) {
     var projectsList = null;
@@ -42,6 +43,14 @@ export var ProjectsPage = astronaut.component("ProjectsPage", function(props, ch
                     if (project.description.trim().length > 0) {
                         descriptionParts.push(Text(project.description));
                     }
+
+                    link.on("click", function() {
+                        var view = projectView.ProjectViewPage({projectId}) ();
+
+                        polyglot.projectViewContainer.add(view);
+
+                        view.screenForward();
+                    });
         
                     var card = Card (
                         Heading({
@@ -51,9 +60,7 @@ export var ProjectsPage = astronaut.component("ProjectsPage", function(props, ch
                             }
                         }) (link),
                         Paragraph() (
-                            BoldTextFragment() (
-                                ...descriptionParts.map((part, i) => i == 0 ? [part] : [Text(_("projects_descriptionSeparator")), part]).flat()
-                            )
+                            ...descriptionParts.map((part, i) => i == 0 ? [part] : [Text(_("projects_descriptionSeparator")), part]).flat()
                         )
                     );
         
