@@ -10,6 +10,7 @@
 
         "back": "Back",
         "create": "Create",
+        "add": "Add",
         "cancel": "Cancel",
         "optional": "(Optional)",
 
@@ -32,6 +33,22 @@
         "projects_zoneSeparator": ": ",
         "projects_descriptionSeparator": " · ",
 
-        "locales": "Locales"
+        "locales": "Locales",
+        "locales_addNewLocale": "Add new locale",
+
+        "addLocaleDialog_title": "Add a new locale",
+
+        "addLocaleDialog_localeCode": "Locale code",
+        "addLocaleDialog_localeCode_example": "en_GB",
+
+        "addLocaleDialog_fullLanguageName": "Full language name",
+        "addLocaleDialog_fullLanguageName_example": "English (United Kingdom)",
+
+        "addLocaleDialog_shortLanguageName": "Short language name",
+        "addLocaleDialog_shortLanguageName_example": "English",
+
+        "addLocaleDialog_textDirection": "Text direction",
+        "addLocaleDialog_textDirection_ltr": "Left-to-right",
+        "addLocaleDialog_textDirection_rtl": "Right-to-left"
     }
 }

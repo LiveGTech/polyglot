@@ -16,6 +16,7 @@ export var ProjectViewPage = astronaut.component("ProjectViewPage", function(pro
     var projectsList = null;
 
     var backButton = IconButton("back", _("back")) ();
+    var addNewLocaleButton = Button() (_("locales_addNewLocale"));
     var projectTitle = TextFragment() ();
 
     function update() {
@@ -38,6 +39,12 @@ export var ProjectViewPage = astronaut.component("ProjectViewPage", function(pro
 
     backButton.on("click", function() {
         polyglot.mainScreen.screenBack();
+    });
+
+    addNewLocaleButton.on("click", function() {
+        polyglot.addLocaleDialog.inter.reset();
+
+        polyglot.addLocaleDialog.dialogOpen();
     });
 
     projects.on("projectschanged", function() {
@@ -120,9 +127,67 @@ export var ProjectViewPage = astronaut.component("ProjectViewPage", function(pro
                     )
                 ),
                 ButtonRow (
-                    Button() ("Add new locale")
+                    addNewLocaleButton
                 )
             )
         )
     );
+});
+
+export var AddLocaleDialog = astronaut.component("AddLocaleDialog", function(props, children, inter) {
+    var localeCodeInput = Input({
+        placeholder: _("addLocaleDialog_localeCode_example"),
+        styles: {
+            "font-family": "var(--fontCode)"
+        }
+    }) ();
+
+    var fullLanguageNameInput = Input({placeholder: _("addLocaleDialog_fullLanguageName_example")}) ();
+    var shortLanguageNameInput = Input({placeholder: _("addLocaleDialog_shortLanguageName_example")}) ();
+
+    var textDirectionInput = SelectionInput({value: "ltr"}) (
+        SelectionInputOption({value: "ltr"}) (_("addLocaleDialog_textDirection_ltr")),
+        SelectionInputOption({value: "rtl"}) (_("addLocaleDialog_textDirection_rtl"))
+    );
+
+    inter.reset = function() {
+        localeCodeInput.setValue("");
+        fullLanguageNameInput.setValue("");
+        shortLanguageNameInput.setValue("");
+        textDirectionInput.setValue("ltr");
+    };
+
+    var cancelButton = Button({mode: "secondary"}) (_("cancel"));
+
+    var dialog = Dialog (
+        DialogContent (
+            Heading(1) (_("addLocaleDialog_title")),
+            Label (
+                Text(_("addLocaleDialog_localeCode")),
+                localeCodeInput
+            ),
+            Label (
+                Text(_("addLocaleDialog_fullLanguageName")),
+                fullLanguageNameInput
+            ),
+            Label (
+                Text(_("addLocaleDialog_shortLanguageName")),
+                shortLanguageNameInput
+            ),
+            Label (
+                Text(_("addLocaleDialog_textDirection")),
+                textDirectionInput
+            )
+        ),
+        ButtonRow("end") (
+            Button() (_("add")),
+            cancelButton
+        )
+    );
+
+    cancelButton.on("click", function() {
+        dialog.dialogClose();
+    });
+
+    return dialog;
 });

@@ -11,10 +11,12 @@ import * as $g from "https://opensource.liveg.tech/Adapt-UI/src/adaptui.js";
 import * as astronaut from "https://opensource.liveg.tech/Adapt-UI/astronaut/astronaut.js";
 
 import * as main from "./main.js";
+import * as projectView from "./projectview.js";
 
 export var mainScreen = null;
 export var newProjectScreen = null;
 export var projectViewContainer = null;
+export var addLocaleDialog = null;
 
 window.$g = $g;
 
@@ -42,7 +44,8 @@ $g.waitForLoad().then(function() {
         Container (
             mainScreen = main.MainScreen({showing: true}) (),
             newProjectScreen = main.NewProjectScreen() (),
-            projectViewContainer = Container() ()
+            projectViewContainer = Container() (),
+            addLocaleDialog = projectView.AddLocaleDialog() ()
         )
     );
 });
