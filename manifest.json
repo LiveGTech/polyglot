@@ -1,0 +1,21 @@
+{
+    "name": "Polyglot",
+    "short_name": "Polyglot",
+    "description": "An app to make translating Adapt UI strings faster and easier.",
+    "icons": [
+        {
+            "src": "/apps/polyglot/media/icon.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "/apps/polyglot/media/appicon.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "maskable"
+        }
+    ],
+    "scope": "/apps/polyglot",
+    "start_url": "/apps/polyglot",
+    "display": "standalone"
+}
