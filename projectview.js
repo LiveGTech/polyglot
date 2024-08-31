@@ -157,6 +157,8 @@ export var AddLocaleDialog = astronaut.component("AddLocaleDialog", function(pro
         textDirectionInput.setValue("ltr");
     };
 
+    var addButton = Button() (_("add"));
+
     var cancelButton = Button({mode: "secondary"}) (_("cancel"));
 
     var dialog = Dialog (
@@ -180,14 +182,39 @@ export var AddLocaleDialog = astronaut.component("AddLocaleDialog", function(pro
             )
         ),
         ButtonRow("end") (
-            Button() (_("add")),
+            addButton,
             cancelButton
         )
     );
 
+    function areRequiredFieldsSatisfied() {
+        if (localeCodeInput.getValue().trim() == "") {
+            return false;
+        }
+
+        if (fullLanguageNameInput.getValue().trim() == "") {
+            return false;
+        }
+
+        return true;
+    }
+
+    function checkCanAdd() {
+        if (areRequiredFieldsSatisfied()) {
+            addButton.removeAttribute("disabled");
+        } else {
+            addButton.addAttribute("disabled");
+        }
+    }
+
     cancelButton.on("click", function() {
         dialog.dialogClose();
     });
+
+    localeCodeInput.on("input", checkCanAdd);
+    fullLanguageNameInput.on("input", checkCanAdd);
+
+    checkCanAdd();
 
     return dialog;
 });
