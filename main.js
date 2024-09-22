@@ -8,8 +8,8 @@
 */
 
 import * as astronaut from "https://opensource.liveg.tech/Adapt-UI/astronaut/astronaut.js";
+import * as screens from "https://opensource.liveg.tech/Adapt-UI/src/screens.js";
 
-import * as polyglot from "./script.js";
 import * as projects from "./projects.js";
 import * as projectView from "./projectview.js";
 
@@ -45,11 +45,7 @@ export var ProjectsPage = astronaut.component("ProjectsPage", function(props, ch
                     }
 
                     link.on("click", function() {
-                        var view = projectView.ProjectViewPage({projectId}) ();
-
-                        polyglot.projectViewContainer.add(view);
-
-                        view.screenForward();
+                        astronaut.addEphemeral(projectView.ProjectViewScreen({projectId}) ()).then((screen) => screen.screenForward());
                     });
         
                     var card = Card (
@@ -85,7 +81,7 @@ export var ProjectsPage = astronaut.component("ProjectsPage", function(props, ch
 });
 
 export var NewProjectScreen = astronaut.component("NewProjectScreen", function(props, children) {
-    var backButton = IconButton("back", _("back")) ();
+    var backButton = IconButton({icon: "back", alt: _("back"), bind: "back"}) ();
 
     var nameInput = Input() ();
     var zoneNameInput = Input({placeholder: _("optional")}) ();
@@ -100,7 +96,7 @@ export var NewProjectScreen = astronaut.component("NewProjectScreen", function(p
     var errorMessage = Paragraph() ();
 
     var createButton = Button() (_("create"));
-    var cancelButton = Button("secondary") (_("cancel"));
+    var cancelButton = Button({mode: "secondary", bind: "back"}) (_("cancel"));
 
     var screen = Screen(props) (
         Header (
@@ -155,22 +151,6 @@ export var NewProjectScreen = astronaut.component("NewProjectScreen", function(p
         )
     );
 
-    function clear() {
-        nameInput.setValue("");
-        zoneNameInput.setValue("");
-        ownerInput.setValue("");
-        descriptionInput.setValue("");
-
-        typeRadioButtons.resourceFiles.setValue(true);
-
-        errorMessage.setText("");
-    }
-
-    backButton.on("click", function() {
-        clear();
-        polyglot.mainScreen.screenBack();
-    });
-
     createButton.on("click", function() {
         var locale = $g.l10n.getSystemLocaleCode();
 
@@ -198,16 +178,10 @@ export var NewProjectScreen = astronaut.component("NewProjectScreen", function(p
             }) || "resourceFiles"
         });
 
-        clear();
-        polyglot.mainScreen.screenBack();
+        screens.navigateBack();
     });
 
-    cancelButton.on("click", function() {
-        clear();
-        polyglot.mainScreen.screenBack();
-    });
-
-    clear();
+    typeRadioButtons.resourceFiles.setValue(true);
 
     return screen;
 })
@@ -218,7 +192,7 @@ export var MainScreen = astronaut.component("MainScreen", function(props, childr
     var newProjectButton = HeaderActionButton({icon: "add", alt: _("projects_new")}) ();
 
     newProjectButton.on("click", function() {
-        polyglot.newProjectScreen.screenForward();
+        astronaut.addEphemeral(NewProjectScreen() ()).then((screen) => screen.screenForward());
     });
 
     return Screen(props) (

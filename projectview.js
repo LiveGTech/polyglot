@@ -9,13 +9,12 @@
 
 import * as astronaut from "https://opensource.liveg.tech/Adapt-UI/astronaut/astronaut.js";
 
-import * as polyglot from "./script.js";
 import * as projects from "./projects.js";
 
-export var ProjectViewPage = astronaut.component("ProjectViewPage", function(props, children) {
+export var ProjectViewScreen = astronaut.component("ProjectViewScreen", function(props, children) {
     var projectsList = null;
 
-    var backButton = IconButton("back", _("back")) ();
+    var backButton = IconButton({icon: "back", alt: _("back"), bind: "back"}) ();
     var addNewLocaleButton = Button() (_("locales_addNewLocale"));
     var projectTitle = TextFragment() ();
 
@@ -37,14 +36,8 @@ export var ProjectViewPage = astronaut.component("ProjectViewPage", function(pro
         );
     }
 
-    backButton.on("click", function() {
-        polyglot.mainScreen.screenBack();
-    });
-
     addNewLocaleButton.on("click", function() {
-        polyglot.addLocaleDialog.inter.reset();
-
-        polyglot.addLocaleDialog.dialogOpen();
+        astronaut.addEphemeral(AddLocaleDialog() ()).then((dialog) => dialog.dialogOpen());
     });
 
     projects.on("projectschanged", function() {
@@ -150,15 +143,6 @@ export var AddLocaleDialog = astronaut.component("AddLocaleDialog", function(pro
         SelectionInputOption({value: "rtl"}) (_("addLocaleDialog_textDirection_rtl"))
     );
 
-    inter.reset = function() {
-        localeCodeInput.setValue("");
-        fullLanguageNameInput.setValue("");
-        shortLanguageNameInput.setValue("");
-        textDirectionInput.setValue("ltr");
-    };
-
-    var cancelButton = Button({mode: "secondary"}) (_("cancel"));
-
     var dialog = Dialog (
         DialogContent (
             Heading(1) (_("addLocaleDialog_title")),
@@ -181,13 +165,9 @@ export var AddLocaleDialog = astronaut.component("AddLocaleDialog", function(pro
         ),
         ButtonRow("end") (
             Button() (_("add")),
-            cancelButton
+            Button({mode: "secondary", bind: "close"}) (_("cancel"))
         )
     );
-
-    cancelButton.on("click", function() {
-        dialog.dialogClose();
-    });
 
     return dialog;
 });
