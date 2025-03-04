@@ -10,7 +10,8 @@
 import * as $g from "https://opensource.liveg.tech/Adapt-UI/src/adaptui.js";
 
 var eventCallbacks = {
-    "projectschanged": []
+    "projectchanged": [],
+    "localechanged": []
 };
 
 export function on(event, callback) {
@@ -32,11 +33,20 @@ export function setProjectData(id, data) {
 
     localStorage.setItem("liveg_polyglot_projects", JSON.stringify(projects));
 
-    emit("projectschanged", {projectId: id});
+    emit("projectchanged", {projectId: id});
 }
 
 export function createProject(data) {
     setProjectData($g.core.generateKey(), data);
+}
+
+export function editProject(id, callback) {
+    var data = getProjects()[id];
+    var result = callback(data);
+
+    setProjectData(id, result ?? data);
+
+    return result ?? data;
 }
 
 export function getLocalisedProjectProperty(project, property) {

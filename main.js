@@ -66,7 +66,7 @@ export var ProjectsPage = astronaut.component("ProjectsPage", function(props, ch
         );
     }
 
-    projects.on("projectschanged", function() {
+    projects.on("projectchanged", function() {
         update();
     });
 

@@ -10,6 +10,7 @@
 import * as astronaut from "https://opensource.liveg.tech/Adapt-UI/astronaut/astronaut.js";
 
 import * as projects from "./projects.js";
+import * as locales from "./locales.js";
 
 export var ProjectViewScreen = astronaut.component("ProjectViewScreen", function(props, children) {
     var projectsList = null;
@@ -17,6 +18,52 @@ export var ProjectViewScreen = astronaut.component("ProjectViewScreen", function
     var backButton = IconButton({icon: "back", alt: _("back"), bind: "back"}) ();
     var addNewLocaleButton = Button() (_("locales_addNewLocale"));
     var projectTitle = TextFragment() ();
+    var localeCardContainer = Container() ();
+
+    function updateLocalesList() {
+        var localeCodes = Object.keys(locales.getLocales(props.projectId));
+
+        if (localeCodes.length == 0) {
+            localeCardContainer.clear().add(
+                Message (
+                    Icon("language", "dark embedded") (),
+                    Heading(2) (_("locales_empty_title")),
+                    Paragraph() (_("locales_empty_description")),
+                    ButtonRow (
+                        addNewLocaleButton
+                    )
+                )
+            );
+
+            return;
+        }
+
+        localeCardContainer.clear().add(
+            Cards() (
+                ...localeCodes.map(function(localeCode) {
+                    var locale = locales.getLocales(props.projectId)[localeCode];
+                    var stringCount = Object.keys(locale.strings || {}).length;
+
+                    return Card (
+                        Heading({
+                            level: 2,
+                            styles: {
+                                "font-size": "var(--sizeH4)"
+                            }
+                        }) (locale.name),
+                        Paragraph() ([
+                            locale.isSource ? _("locales_status_sourceLanguage") : null,
+                            _("locales_status_stringCount", {count: stringCount})
+                        ].filter((part) => part).join(" · ")),
+                        ProgressIndicator({mode: "secondary", value: 0}) ()
+                    );
+                })
+            ),
+            ButtonRow (
+                addNewLocaleButton
+            )
+        );
+    }
 
     function update() {
         projectsList = projects.getProjects();
@@ -25,22 +72,22 @@ export var ProjectViewScreen = astronaut.component("ProjectViewScreen", function
 
         if (project.zoneName.trim().length == 0) {
             projectTitle.setText(project.name);
-
-            return;
+        } else {
+            projectTitle.clear().add(
+                Text(project.name),
+                Text(_("projects_zoneSeparator")),
+                Text(project.zoneName)
+            );
         }
 
-        projectTitle.clear().add(
-            Text(project.name),
-            Text(_("projects_zoneSeparator")),
-            Text(project.zoneName)
-        );
+        updateLocalesList();
     }
 
     addNewLocaleButton.on("click", function() {
-        astronaut.addEphemeral(AddLocaleDialog() ()).then((dialog) => dialog.dialogOpen());
+        astronaut.addEphemeral(AddLocaleDialog({projectId: props.projectId}) ()).then((dialog) => dialog.dialogOpen());
     });
 
-    projects.on("projectschanged", function() {
+    projects.on("projectchanged", function() {
         update();
     });
 
@@ -54,74 +101,7 @@ export var ProjectViewScreen = astronaut.component("ProjectViewScreen", function
         Page(true) (
             Section (
                 Heading(1) (_("locales")),
-                Cards (
-                    Card (
-                        Heading({
-                            level: 2,
-                            styles: {
-                                "font-size": "var(--sizeH4)"
-                            }
-                        }) ("العربية (الإمارات العربية المتحدة)"),
-                        Paragraph() ("40% complete · 3 flagged"),
-                        ProgressIndicator({mode: "secondary", value: 0.4}) ()
-                    ),
-                    Card (
-                        Heading({
-                            level: 2,
-                            styles: {
-                                "font-size": "var(--sizeH4)"
-                            }
-                        }) ("English (United Kingdom)"),
-                        Paragraph() ("Source language"),
-                        ProgressIndicator({mode: "secondary", value: 1}) ()
-                    ),
-                    Card (
-                        Heading({
-                            level: 2,
-                            styles: {
-                                "font-size": "var(--sizeH4)"
-                            }
-                        }) ("English (United States)"),
-                        Paragraph() ("15% complete · Based on English (United Kingdom)"),
-                        ProgressIndicator({
-                            mode: "secondary",
-                            value: 0.15
-                        }) ()
-                    ),
-                    Card (
-                        Heading({
-                            level: 2,
-                            styles: {
-                                "font-size": "var(--sizeH4)"
-                            }
-                        }) ("Français (France)"),
-                        Paragraph() ("90% complete"),
-                        ProgressIndicator({mode: "secondary", value: 0.9}) ()
-                    ),
-                    Card (
-                        Heading({
-                            level: 2,
-                            styles: {
-                                "font-size": "var(--sizeH4)"
-                            }
-                        }) ("Русский (Россия)"),
-                        Paragraph() ("45% complete · 2 flagged"),
-                        ProgressIndicator({mode: "secondary", value: 0.45}) ()
-                    ),
-                    Card (
-                        Heading({
-                            level: 2,
-                            styles: {
-                                "font-size": "var(--sizeH4)"
-                            }
-                        }) ("中文（中国）"),
-                        Paragraph() ("60% complete"),
-                        ProgressIndicator({mode: "secondary", value: 0.6}) ()
-                    )
-                ),
-                ButtonRow (
-                    addNewLocaleButton
-                )
+                localeCardContainer
             )
         )
     );
@@ -143,6 +123,10 @@ export var AddLocaleDialog = astronaut.component("AddLocaleDialog", function(pro
         SelectionInputOption({value: "rtl"}) (_("addLocaleDialog_textDirection_rtl"))
     );
 
+    var makeSourceInput = CheckboxInput({value: Object.keys(locales.getLocales(props.projectId) || {}).length == 0}) ();
+
+    var errorMessage = Paragraph() ();
+
     var addButton = Button() (_("add"));
 
     var dialog = Dialog (
@@ -163,7 +147,12 @@ export var AddLocaleDialog = astronaut.component("AddLocaleDialog", function(pro
             Label (
                 Text(_("addLocaleDialog_textDirection")),
                 textDirectionInput
-            )
+            ),
+            Label (
+                makeSourceInput,
+                Text(_("addLocaleDialog_makeSource"))
+            ),
+            errorMessage
         ),
         ButtonRow("end") (
             addButton,
@@ -193,6 +182,30 @@ export var AddLocaleDialog = astronaut.component("AddLocaleDialog", function(pro
 
     localeCodeInput.on("input", checkCanAdd);
     fullLanguageNameInput.on("input", checkCanAdd);
+
+    addButton.on("click", function() {
+        if (!areRequiredFieldsSatisfied()) {
+            errorMessage.setText(_("addLocaleDialog_incompleteError"));
+            return;
+        }
+
+        var localeCode = localeCodeInput.getValue().trim();
+
+        if (locales.getLocales(props.projectId)[localeCode]) {
+            errorMessage.setText(_("addLocaleDialog_alreadyExistsError"));
+            return;
+        }
+
+        locales.createLocale(props.projectId, localeCode, {
+            name: fullLanguageNameInput.getValue().trim(),
+            nameShort: shortLanguageNameInput.getValue().trim() || undefined,
+            textDirection: textDirectionInput.getValue()
+        }, {
+            makeSource: makeSourceInput.getValue()
+        });
+
+        dialog.dialogClose();
+    });
 
     checkCanAdd();
 

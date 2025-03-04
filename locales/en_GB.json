@@ -37,6 +37,8 @@
         "locales_addNewLocale": "Add new locale",
 
         "addLocaleDialog_title": "Add a new locale",
+        "addLocaleDialog_incompleteError": "Please fill in all the required fields.",
+        "addLocaleDialog_alreadyExistsError": "The locale code you have entered already exists for this project. Please enter a different locale code.",
 
         "addLocaleDialog_localeCode": "Locale code",
         "addLocaleDialog_localeCode_example": "en_GB",
@@ -49,6 +51,22 @@
 
         "addLocaleDialog_textDirection": "Text direction",
         "addLocaleDialog_textDirection_ltr": "Left-to-right",
-        "addLocaleDialog_textDirection_rtl": "Right-to-left"
+        "addLocaleDialog_textDirection_rtl": "Right-to-left",
+
+        "addLocaleDialog_makeSource": "Make this the source language",
+
+        "locales_empty_title": "No locales yet",
+        "locales_empty_description": "Get started with writing strings by creating a locale for this project first.",
+
+        "locales_status_sourceLanguage": "Source language",
+        "locales_status_stringCount": {
+            "{count} == 0": "Empty",
+            "{count} == 1": "{count} string",
+            "{count} > 1": "{count} strings"
+        },
+        "locales_status_percentComplete": "{percentage}% complete",
+        "locales_status_fallbackLocale": "Based on {name}",
+
+        "locales_statusSeparator": " · "
     }
 }
